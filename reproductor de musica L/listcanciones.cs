@@ -10,7 +10,7 @@ namespace reproductor_de_musica_L
     {
        string titulo;
        string ubicacion;
-        string duracion;
+
         public string Titulo
         {
             get
@@ -37,17 +37,6 @@ namespace reproductor_de_musica_L
             }
         }
 
-        public string Duracion
-        {
-            get
-            {
-                return duracion;
-            }
-
-            set
-            {
-                duracion = value;
-            }
-        }
+   
     }
 }

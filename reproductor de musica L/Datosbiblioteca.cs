@@ -6,38 +6,66 @@ using System.Threading.Tasks;
 
 namespace reproductor_de_musica_L
 {
-    class datoscancion
+    class Datosbiblioteca
     {
-        string titulo;
+        string Titulo;
+      
         string ubicacion;
+        string numero;
+        string calidad;
+        string album;
         string duracion;
-        string Artista;
-        string genero;
-        string media_types;
-
-        public string Titulo
+        public string Titulo1
         {
             get
             {
-                return titulo;
+                return Titulo;
             }
 
             set
             {
-                titulo = value;
+                Titulo = value;
             }
         }
 
-        public string Ubicacion
+     
+
+        public string Calidad
         {
             get
             {
-                return ubicacion;
+                return calidad;
             }
 
             set
             {
-                ubicacion = value;
+                calidad = value;
+            }
+        }
+
+        public string Numero
+        {
+            get
+            {
+                return numero;
+            }
+
+            set
+            {
+                numero = value;
+            }
+        }
+
+        public string Album
+        {
+            get
+            {
+                return album;
+            }
+
+            set
+            {
+                album = value;
             }
         }
 
@@ -54,46 +82,17 @@ namespace reproductor_de_musica_L
             }
         }
 
- 
-
-        public string Genero
+        public string Ubicacion
         {
             get
             {
-                return genero;
+                return ubicacion;
             }
 
             set
             {
-                genero = value;
-            }
-        }
-
-        public string Media_types
-        {
-            get
-            {
-                return media_types;
-            }
-
-            set
-            {
-                media_types = value;
-            }
-        }
-
-        public string Artista1
-        {
-            get
-            {
-                return Artista;
-            }
-
-            set
-            {
-                Artista = value;
+                ubicacion = value;
             }
         }
     }
-    }
-
+}
