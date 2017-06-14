@@ -121,13 +121,16 @@
   <data name="menu_318-8688" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\menu_318-8688.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="8918" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\8918.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="5798ae4467a2b1562c68bb49" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\5798ae4467a2b1562c68bb49.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="signo-de-interrogacion_318-52837" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\signo-de-interrogacion_318-52837.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="8918" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\8918.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="images" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\images.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

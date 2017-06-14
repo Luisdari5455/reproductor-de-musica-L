@@ -16,8 +16,9 @@ namespace reproductor_de_musica_L
 {
     public partial class Form1 : Form
     {
-        static XmlDocument documento = new XmlDocument();
 
+        static XmlDocument documento = new XmlDocument();
+        static string ruta = @"biblio.xml";
         List<Datosbiblioteca> listabiblioteca = new List<Datosbiblioteca>();
         List<listcanciones> listareproduci = new List<listcanciones>();
         List<datoscancion> listadatos = new List<datoscancion>();
@@ -293,6 +294,45 @@ namespace reproductor_de_musica_L
 
 
         }
+        public void EscribirXml()
+        {
+            for (int i = 0; i < listabiblioteca.Count(); i++)
+            {
+                if (label11.Text == listabiblioteca[i].Titulo1)
+                {
+                    //Creamos el escritor.
+                    using (XmlTextWriter Writer = new XmlTextWriter(@"biblio.xml", Encoding.UTF8))
+                    {
+                        //Declaración inicial del Xml.
+                        Writer.WriteStartDocument();
+
+                        //Configuración.
+                        Writer.Formatting = Formatting.Indented;
+                        Writer.Indentation = 5;
+
+                        //Escribimos el nodo principal.
+                        Writer.WriteStartElement("Blibioteca");
+
+                        //Escribimos un nodo empleado.
+                        Writer.WriteStartElement("Cancion");
+
+                        //Escribimos cada uno de los elementos del nodo empleado.
+                        Writer.WriteElementString("nombre", listabiblioteca[i].Titulo1);
+                        Writer.WriteElementString("url", listabiblioteca[i].Ubicacion);
+                        Writer.WriteElementString("num", listabiblioteca[i].Numero);
+                        Writer.WriteElementString("album", listabiblioteca[i].Album);
+                        //Escribimos el subnodo teléfono.
+                        Writer.WriteElementString("duracion", listabiblioteca[i].Duracion);
+                        Writer.WriteElementString("calidad", listabiblioteca[i].Calidad);
+
+                        //Cerramos el nodo y el documento.
+                        Writer.WriteEndElement();
+                        Writer.WriteEndDocument();
+                        Writer.Flush();
+                    }
+                }
+            }
+        }
         public void cargar()
         {
             dataGridView2.DataSource = null;
@@ -346,6 +386,10 @@ namespace reproductor_de_musica_L
             reprotemp.Titulo = openFileDialog1.SafeFileName.ToString();
             label1.Visible = true;
             dataGridView2.Visible = true;
+            button5.Visible = true;
+            button6.Visible = true;
+            button7.Visible = true;
+            label11.Visible = true;
             listareproduci.Add(reprotemp);
             cargar();
             xml();
@@ -354,7 +398,7 @@ namespace reproductor_de_musica_L
 
         private void eliminarCancionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string nomb = label1.Text;
+            string nomb = label11.Text;
             for (int i = 0; i < listareproduci.Count; i++)
             {
                 if (nomb == listareproduci[i].Titulo)
@@ -373,28 +417,35 @@ namespace reproductor_de_musica_L
             listareproduci.RemoveRange(inicio, contar);
             cargar();
         }
+        public void actualizar2()
+        {
+            if (listabiblioteca.Count == 0)
+            {
+                leerbiblioteca();
+            }
 
+        }
         private void button4_Click_5(object sender, EventArgs e)
         {
             if (listareproduci.Count == 0)
             {
                 listabiblioteca.RemoveRange(0, listabiblioteca.Count);
-              
+                actualizar2();
                 int max2 = listabiblioteca.Count;
                 for (int i = 0; i < listabiblioteca.Count; i++)
                 {
-                    if (label1.Text == listabiblioteca[i].Titulo1)
+                    if (label12.Text == listabiblioteca[i].Titulo1)
                     {
                         if (i == max2 - 1)
                         {
                             axWindowsMediaPlayer1.URL = listabiblioteca[0].Ubicacion;
-                            label1.Text = listabiblioteca[0].Titulo1;
+                            label12.Text = listabiblioteca[0].Titulo1;
                             break;
                         }
                         else
                         {
                             axWindowsMediaPlayer1.URL = listabiblioteca[i + 1].Ubicacion;
-                            label1.Text = listabiblioteca[i + 1].Titulo1;
+                            label12.Text = listabiblioteca[i + 1].Titulo1;
                             break;
                         }
 
@@ -408,18 +459,18 @@ namespace reproductor_de_musica_L
                 int max = listareproduci.Count;
                 for (int i = 0; i < listareproduci.Count; i++)
                 {
-                    if (label1.Text == listareproduci[i].Titulo)
+                    if (label11.Text == listareproduci[i].Titulo)
                     {
                         if (i == max - 1)
                         {
                             axWindowsMediaPlayer1.URL = listareproduci[0].Ubicacion;
-                            label1.Text = listareproduci[0].Titulo;
+                            label11.Text = listareproduci[0].Titulo;
                             break;
                         }
                         else
                         {
                             axWindowsMediaPlayer1.URL = listareproduci[i + 1].Ubicacion;
-                            label1.Text = listareproduci[i + 1].Titulo;
+                            label11.Text = listareproduci[i + 1].Titulo;
                             break;
                         }
 
@@ -435,6 +486,9 @@ namespace reproductor_de_musica_L
 
         private void dataGridView2_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
         {
+            string nom = dataGridView2.CurrentRow.Cells["titulo"].Value.ToString();
+            label11.Text = nom;
+
 
         }
         public void actualizar()
@@ -465,7 +519,7 @@ namespace reproductor_de_musica_L
         }
         public void leerbiblioteca()
         {
-            XDocument documento = XDocument.Load(@"biblioteca.xml");
+            XDocument documento = XDocument.Load(@"biblio.xml");
             var listar = from lis in documento.Descendants("Blibioteca") select lis;
             foreach (XElement u in listar.Elements("Cancion"))
             {
@@ -480,7 +534,7 @@ namespace reproductor_de_musica_L
 
             }
         }
-
+     
         private void dataGridView3_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -504,10 +558,224 @@ namespace reproductor_de_musica_L
 
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            string nom = dataGridView3.CurrentRow.Cells["titulo1"].Value.ToString();
+            label12.Text = nom;
+        }
+
+        private void button5_Click_1(object sender, EventArgs e)
+        {
 
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string nomb = label11.Text;
+            for (int i = 0; i < listareproduci.Count; i++)
+            {
+                if (nomb == listareproduci[i].Titulo)
+                {
+                    listareproduci.RemoveAt(i);
+                    axWindowsMediaPlayer1.Ctlcontrols.stop();
+                    
+                  
+                }
+            }
+            cargar();
+
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog();
+            openFileDialog1.Multiselect = true;
+            listcanciones reprotemp = new listcanciones();
+            reprotemp.Ubicacion = openFileDialog1.FileName;
+            reprotemp.Titulo = openFileDialog1.SafeFileName.ToString();
+            label1.Visible = true;
+            dataGridView2.Visible = true;
+            listareproduci.Add(reprotemp);
+            cargar();
+            xml();
+
+        }
+
+        private void button5_Click_2(object sender, EventArgs e)
+        {
+            int contar = listareproduci.Count();
+            int inicio = 0;
+            listareproduci.RemoveRange(inicio, contar);
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
+            cargar();
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            listabiblioteca.RemoveRange(0, listabiblioteca.Count);
+            string nom = label12.Text;
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
+            ModificarDatosXml(nom);
+            leerbiblioteca();
+            dataGridView3.DataSource = null;
+            dataGridView3.Refresh();
+            dataGridView3.DataSource = listabiblioteca;
+            dataGridView3.Refresh();
+        }
+        public void ModificarDatosXml(string url)
+        {
+            //Cargamos el documento XML.
+            documento = new XmlDocument();
+            documento.Load(ruta);
+            //Obtenemos el nodo raiz del documento.
+            XmlElement bibliot = documento.DocumentElement;
+
+            //Obtenemos la lista de todos los empleados.
+            XmlNodeList listacancion = documento.SelectNodes("Blibioteca/Cancion");
+
+            foreach (XmlNode item in listacancion)
+            {
+                //Determinamos el nodo a modificar por medio del id de empleado.
+                if (item.FirstChild.InnerText == url)
+                {
+                    //Nodo sustituido.
+                    XmlNode nodoOld = item;
+                    bibliot.RemoveChild(nodoOld);
+                }
+            }
+
+            //Salvamos el documento.
+            documento.Save(ruta);
+        }
+        private XmlNode CrearNodoXml(string nom1, string url1, string num1, string album1, string dura1, string cali1)
+        {
+            //Creamos el nodo que deseamos insertar.
+            XmlElement Cancion = documento.CreateElement("Cancion");
+
+            //Creamos el elemento idEmpleado.
+            XmlElement nombre = documento.CreateElement("Titulo");
+            nombre.InnerText = nom1;
+            Cancion.AppendChild(nombre);
+
+            //Creamos el elemento nombre.
+            XmlElement Url = documento.CreateElement("Url");
+            Url.InnerText = url1;
+            Cancion.AppendChild(Url);
+
+            //Creamos el elemento apellidos.
+            XmlElement num = documento.CreateElement("No");
+            num.InnerText = num1;
+            Cancion.AppendChild(num);
+
+            //Creamos el elemento numeroSS.
+            XmlElement album = documento.CreateElement("Album");
+            album.InnerText = album1;
+            Cancion.AppendChild(album);
+
+            //Creamos el elemento fijo.
+            XmlElement duracion = documento.CreateElement("Duracion");
+            duracion.InnerText = dura1;
+            Cancion.AppendChild(duracion);
+            //Creamos el elemento movil.
+            XmlElement calidad = documento.CreateElement("Calidad");
+            calidad.InnerText = cali1;
+            Cancion.AppendChild(calidad);
+
+            return Cancion;
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            string nomb = label11.Text;
+            for (int i = 0; i < listareproduci.Count; i++)
+            {
+                Datosbiblioteca blitmp = new Datosbiblioteca();
+                if (nomb == listareproduci[i].Titulo)
+                {
+                    blitmp.Ubicacion = listareproduci[i].Ubicacion;
+                    blitmp.Titulo1= listareproduci[i].Titulo;
+                    TagLib.File file = TagLib.File.Create(listareproduci[i].Ubicacion);
+                    blitmp.Titulo1 = file.Tag.Title;
+                    blitmp.Duracion = file.Properties.Duration.ToString();
+                    blitmp.Numero = Convert.ToString(file.Tag.Track);
+                    blitmp.Album = file.Tag.Album;
+                    blitmp.Calidad = Convert.ToString(file.Properties.AudioBitrate);
+
+                }
+                listabiblioteca.Add(blitmp);
+            }
+            string archivo = @"biblio.xml";
+            if (File.Exists(archivo) == true)
+            {
+                InsertarXml();
+            }
+            else { EscribirXml(); }
+        }
+        string nombre1, url, num, album, dura, cali;
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            listareproduci.RemoveRange(0, listareproduci.Count);
+            actualizar();
+            int max = listareproduci.Count;
+            for (int i = 0; i < listareproduci.Count; i++)
+            {
+                if (label11.Text == listareproduci[i].Titulo)
+                {
+                    if (i == 0)
+                    {
+                        axWindowsMediaPlayer1.URL = listareproduci[max - 1].Ubicacion;
+                        label11.Text = listareproduci[max - 1].Titulo;
+                        break;
+                    }
+                    else
+                    {
+                        axWindowsMediaPlayer1.URL = listareproduci[i - 1].Ubicacion;
+                        label11.Text = listareproduci[i - 1].Titulo;
+                        break;
+                    }
+
+                }
+            }
+            listadatos.RemoveRange(0, listadatos.Count);
+            tag_info(axWindowsMediaPlayer1.URL);
+        
     }
+
+        private void InsertarXml()
+        {
+            //Cargamos el documento XML.
+            documento = new XmlDocument();
+            documento.Load(ruta);
+
+            for (int i = 0; i < listabiblioteca.Count(); i++)
+            {
+
+                if (label11.Text == listabiblioteca[i].Titulo1)
+                {
+
+                    nombre1 = listabiblioteca[i].Titulo1;
+                    url = listabiblioteca[i].Ubicacion;
+                    num = listabiblioteca[i].Numero;
+                    album = listabiblioteca[i].Album;
+                    dura = listabiblioteca[i].Duracion;
+                    cali = listabiblioteca[i].Calidad;
+
+                }
+            }
+            //Creamos el nodo que deseamos insertar.
+            XmlNode empleado = this.CrearNodoXml(nombre1, url, num, album, dura, cali);
+            //Obtenemos el nodo raiz del documento.
+            XmlNode nodoRaiz = documento.DocumentElement;
+
+            //Insertamos el nodo empleado al final del archivo
+            nodoRaiz.InsertAfter(empleado, nodoRaiz.LastChild);   //***
+
+            documento.Save(ruta);
+        }
+      
+    
     }
+}
+ 
         
     
     
