@@ -684,32 +684,58 @@ namespace reproductor_de_musica_L
 
         private void button9_Click(object sender, EventArgs e)
         {
-            string nomb = label11.Text;
-            for (int i = 0; i < listareproduci.Count; i++)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Datosbiblioteca blitmp = new Datosbiblioteca();
-                if (nomb == listareproduci[i].Titulo)
-                {
-                    blitmp.Ubicacion = listareproduci[i].Ubicacion;
-                    blitmp.Titulo1= listareproduci[i].Titulo;
-                    TagLib.File file = TagLib.File.Create(listareproduci[i].Ubicacion);
-                    blitmp.Titulo1 = file.Tag.Title;
-                    blitmp.Duracion = file.Properties.Duration.ToString();
-                    blitmp.Numero = Convert.ToString(file.Tag.Track);
-                    blitmp.Album = file.Tag.Album;
-                    blitmp.Calidad = Convert.ToString(file.Properties.AudioBitrate);
-
-                }
-                listabiblioteca.Add(blitmp);
+                url = openFileDialog1.FileName;
             }
+            listadatos.RemoveRange(0, listadatos.Count);
+
+
+
+            Datosbiblioteca blitmp = new Datosbiblioteca();
+            TagLib.File file = TagLib.File.Create(url);
+            blitmp.Ubicacion = url;
+         
+            blitmp.Titulo1 = file.Tag.Title;
+            label12.Text = file.Tag.Title;
+         
+            blitmp.Duracion = file.Properties.Duration.ToString();
+            blitmp.Numero = Convert.ToString(file.Tag.Track);
+            blitmp.Album = file.Tag.Album;
+            blitmp.Calidad = Convert.ToString(file.Properties.AudioBitrate);
+
+            listabiblioteca.Add(blitmp);
+
             string archivo = @"biblio.xml";
             if (File.Exists(archivo) == true)
             {
                 InsertarXml();
             }
             else { EscribirXml(); }
+            listabiblioteca.RemoveRange(0, listabiblioteca.Count);
+            leerbiblioteca();
+            dataGridView3.DataSource = null;
+            dataGridView3.Refresh();
+            dataGridView3.DataSource = listabiblioteca;
+            dataGridView3.Columns["Ubicacion"].Visible = false;
+            dataGridView3.Refresh();
         }
         string nombre1, url, num, album, dura, cali;
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            listareproduci.RemoveRange(0, listareproduci.Count);
+            actualizar();
+            var myPlayList = axWindowsMediaPlayer1.playlistCollection.newPlaylist("MyPlayList");
+
+            for (int i = 0; i < listareproduci.Count; i++)
+            {
+                var mediaItem = axWindowsMediaPlayer1.newMedia(listareproduci[i].Ubicacion);
+                myPlayList.appendItem(mediaItem);
+            }
+            axWindowsMediaPlayer1.currentPlaylist = myPlayList;
+
+        }
 
         private void button10_Click(object sender, EventArgs e)
         {
@@ -742,14 +768,14 @@ namespace reproductor_de_musica_L
 
         private void InsertarXml()
         {
-            //Cargamos el documento XML.
+            
             documento = new XmlDocument();
             documento.Load(ruta);
 
             for (int i = 0; i < listabiblioteca.Count(); i++)
             {
 
-                if (label11.Text == listabiblioteca[i].Titulo1)
+                if (label12.Text == listabiblioteca[i].Titulo1)
                 {
 
                     nombre1 = listabiblioteca[i].Titulo1;
@@ -761,13 +787,13 @@ namespace reproductor_de_musica_L
 
                 }
             }
-            //Creamos el nodo que deseamos insertar.
+           
             XmlNode empleado = this.CrearNodoXml(nombre1, url, num, album, dura, cali);
-            //Obtenemos el nodo raiz del documento.
+           
             XmlNode nodoRaiz = documento.DocumentElement;
 
-            //Insertamos el nodo empleado al final del archivo
-            nodoRaiz.InsertAfter(empleado, nodoRaiz.LastChild);   //***
+           
+            nodoRaiz.InsertAfter(empleado, nodoRaiz.LastChild);   
 
             documento.Save(ruta);
         }
